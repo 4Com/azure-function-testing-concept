@@ -12,8 +12,8 @@ namespace http_function
 {
     public static class HttpFunctions
     {
-        [FunctionName("GetSomething")]
-        public static async Task<IActionResult> GetSomething(
+        [FunctionName("GetPerson")]
+        public static async Task<IActionResult> GetPerson(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "v1/person")] HttpRequest req,
             ILogger log)
         {
@@ -28,9 +28,8 @@ namespace http_function
             return new OkObjectResult(responseMessage);
         }
 
-
-        [FunctionName("PostSomething")]
-        public static async Task<IActionResult> PostSomething(
+        [FunctionName("PostPerson")]
+        public static async Task<IActionResult> PostPerson(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "v1/person")] HttpRequest req,
             ILogger log)
         {
