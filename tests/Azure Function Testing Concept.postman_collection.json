@@ -15,7 +15,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 404\", function () {\r",
+									"pm.test(\"Status code is Not Found\", function () {\r",
 									"    pm.response.to.have.status(404);\r",
 									"});\r",
 									"\r",
@@ -68,7 +68,7 @@
 								"exec": [
 									"var personName = pm.environment.get(\"name\");\r",
 									"\r",
-									"pm.test(\"Status code is 200\", function () {\r",
+									"pm.test(\"Status code is OK\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
@@ -125,7 +125,43 @@
 					"response": []
 				},
 				{
-					"name": "Post Person",
+					"name": "Post Person creates",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"name\", \"Barb\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var personName = pm.environment.get(\"name\");\r",
+									"\r",
+									"pm.test(\"Status code is Created\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body matches string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(personName);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -136,7 +172,70 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": 94931845,\n    \"name\": \"eiusmod sunt irure\",\n    \"phoneNumber\": \"elit non in id\",\n    \"address\": \"proident labore ex\"\n}"
+							"raw": "{\n    \"id\": 42,\n    \"name\": \"{{name}}\",\n    \"phoneNumber\": \"Unknown\",\n    \"address\": \"The Upside Down\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/person",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"person"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post Person conflict",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"name\", \"John\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var personName = pm.environment.get(\"name\");\r",
+									"\r",
+									"pm.test(\"Status code is Conflict\", function () {\r",
+									"    pm.response.to.have.status(409);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body matches string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(personName);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 41,\n    \"name\": \"{{name}}\",\n    \"phoneNumber\": \"888-519-1991\",\n    \"address\": \"19828 Valerio St, Winnetka, CA 91306, USA\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/v1/person",
