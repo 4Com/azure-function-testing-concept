@@ -7,13 +7,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using http_function.Models;
+using System.Linq;
 
 namespace http_function
 {
     public static class HttpFunctions
     {
         [FunctionName("GetPerson")]
-        public static async Task<IActionResult> GetPerson(
+        public static IActionResult GetPerson(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "v1/person")] HttpRequest req,
             ILogger log)
         {
@@ -21,11 +22,14 @@ namespace http_function
 
             string name = req.Query["name"];
 
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
+            if (Data.People.Any(x => x.Name == name))
+            {
+                log.LogInformation($"Located person with name {name}.");
+                return new OkObjectResult(Data.People.First(x => x.Name == name));
+            }
 
-            return new OkObjectResult(responseMessage);
+            log.LogInformation($"No match for person with name {name}.");
+            return new NotFoundResult();
         }
 
         [FunctionName("PostPerson")]
