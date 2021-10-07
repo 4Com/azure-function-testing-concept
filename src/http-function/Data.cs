@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace http_function
 {
-    internal class Data
+    internal static class Data
     {
-        public List<Person> People
+        public static List<Person> People
         {
             get
             {
