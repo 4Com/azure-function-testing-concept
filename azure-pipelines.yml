@@ -47,6 +47,7 @@ steps:
 
 - task: Bash@3
   displayName: 'Run Newman Tests'
+  continueOnError: true
   inputs:
     targetType: 'inline'
     script: |
