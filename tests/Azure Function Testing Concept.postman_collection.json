@@ -9,12 +9,38 @@
 			"name": "v1/person",
 			"item": [
 				{
-					"name": "Get Person",
+					"name": "Get Person does not exist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"name\", \"Barb\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/v1/person?name=John",
+							"raw": "{{baseUrl}}/v1/person?name={{name}}",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -25,82 +51,78 @@
 							"query": [
 								{
 									"key": "name",
-									"value": "John",
+									"value": "{{name}}",
 									"description": "(Required) The **Name** of the person to GET"
 								}
 							]
 						}
 					},
-					"response": [
+					"response": []
+				},
+				{
+					"name": "Get Person does exist",
+					"event": [
 						{
-							"name": "The OK response with the person in the body",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/v1/person?name=John",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"v1",
-										"person"
-									],
-									"query": [
-										{
-											"key": "name",
-											"value": "John"
-										}
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								}
-							],
-							"cookie": [],
-							"body": "{\n \"id\": 94931845,\n \"name\": \"eiusmod sunt irure\",\n \"phoneNumber\": \"elit non in id\",\n \"address\": \"proident labore ex\"\n}"
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var personName = pm.environment.get(\"name\");\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body should be populated\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.name).to.eql(personName);\r",
+									"    pm.expect(jsonData.id).to.be.greaterThan(0);\r",
+									"    pm.expect(jsonData.phoneNumber).to.be.string;\r",
+									"    pm.expect(jsonData.address).to.be.string;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
 						},
 						{
-							"name": "The person could not be found for this name",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/v1/person?name=Dave",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"v1",
-										"person"
-									],
-									"query": [
-										{
-											"key": "name",
-											"value": "Dave"
-										}
-									]
-								}
-							},
-							"status": "Not Found",
-							"code": 404,
-							"_postman_previewlanguage": "text",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "text/plain"
-								}
-							],
-							"cookie": [],
-							"body": ""
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"name\", \"John\");"
+								],
+								"type": "text/javascript"
+							}
 						}
-					]
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/person?name={{name}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"person"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "{{name}}",
+									"description": "(Required) The **Name** of the person to GET"
+								}
+							]
+						}
+					},
+					"response": []
 				},
 				{
 					"name": "Post Person",
@@ -127,81 +149,39 @@
 							]
 						}
 					},
-					"response": [
-						{
-							"name": "The person has been created, the name will be confirmed in the body and the header location set",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"id\": 94931845,\n    \"name\": \"Barb\",\n    \"phoneNumber\": \"elit non in id\",\n    \"address\": \"proident labore ex\"\n}"
-								},
-								"url": {
-									"raw": "{{baseUrl}}/v1/person",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"v1",
-										"person"
-									]
-								}
-							},
-							"status": "Created",
-							"code": 201,
-							"_postman_previewlanguage": "text",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "text/plain"
-								}
-							],
-							"cookie": [],
-							"body": "in quis adipisicing dolor"
-						},
-						{
-							"name": "Person already exists with this name",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"id\": 94931845,\n    \"name\": \"John\",\n    \"phoneNumber\": \"elit non in id\",\n    \"address\": \"proident labore ex\"\n}"
-								},
-								"url": {
-									"raw": "{{baseUrl}}/v1/person",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"v1",
-										"person"
-									]
-								}
-							},
-							"status": "Conflict",
-							"code": 409,
-							"_postman_previewlanguage": "text",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "text/plain"
-								}
-							],
-							"cookie": [],
-							"body": "in quis adipisicing dolor"
-						}
-					]
+					"response": []
 				}
 			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	],
 	"variable": [
 		{
 			"key": "baseUrl",
-			"value": "http://localhost:7071/api",
-			"type": "string"
+			"value": "http://localhost:7071/api"
+		},
+		{
+			"key": "name",
+			"value": "John"
 		}
 	]
 }
