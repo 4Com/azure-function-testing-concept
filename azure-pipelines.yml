@@ -44,3 +44,19 @@ steps:
     appType: "functionApp"
     appName: "$(functionAppName)"
     package: "$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip"
+
+- task: Bash@3
+  displayName: 'Run Newman Tests'
+  inputs:
+    targetType: 'inline'
+    script: |
+      npm install -g newman
+      newman run '$(Build.SourcesDirectory)/tests/Azure Function Testing Concept.postman_collection.json' --env-var 'baseUrl=$(appBaseUrl)' --reporters cli,junit --reporter-junit-export junit-report.xml
+
+- task: PublishTestResults@2
+  displayName: 'Publish Test Results'
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: '**/*.xml'
+    mergeTestResults: true
+    failTaskOnFailedTests: true
