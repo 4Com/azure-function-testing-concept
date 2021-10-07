@@ -8,12 +8,18 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using http_function.Models;
 using System.Linq;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
+using Microsoft.OpenApi.Models;
 
 namespace http_function
 {
     public static class HttpFunctions
     {
         [FunctionName("GetPerson")]
+        [OpenApiOperation(operationId: "GetPerson", tags: new[] { "name" })]
+        [OpenApiParameter(name: "name", In = ParameterLocation.Query, Required = true, Type = typeof(string), Description = "The **Name** of the person to GET")]
+        [OpenApiResponseWithBody(statusCode: System.Net.HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(Person), Description = "The OK response with the person in the body")]
+        [OpenApiResponseWithoutBody(statusCode: System.Net.HttpStatusCode.NotFound, Description = "The person could not be found for this name")]
         public static IActionResult GetPerson(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "v1/person")] HttpRequest req,
             ILogger log)
@@ -33,6 +39,10 @@ namespace http_function
         }
 
         [FunctionName("PostPerson")]
+        [OpenApiOperation(operationId: "PostPerson", tags: new[] { "name" })]
+        [OpenApiRequestBody("application/json", typeof(Person))]
+        [OpenApiResponseWithBody(statusCode: System.Net.HttpStatusCode.Conflict, contentType: "text/plain", bodyType: typeof(string), Description = "Person already exists with this name")]
+        [OpenApiResponseWithBody(statusCode: System.Net.HttpStatusCode.Created, contentType: "text/plain", bodyType: typeof(string), Description = "The person has been created, the name will be confirmed in the body and the header location set")]
         public static async Task<IActionResult> PostPerson(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "v1/person")] HttpRequest req,
             ILogger log)
