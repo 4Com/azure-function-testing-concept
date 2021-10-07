@@ -18,7 +18,7 @@ namespace http_function
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "v1/person")] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            log.LogInformation("C# HTTP trigger function processed a GET request.");
 
             string name = req.Query["name"];
 
@@ -37,19 +37,19 @@ namespace http_function
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "v1/person")] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
-
-            string name = req.Query["name"];
+            log.LogInformation("C# HTTP trigger function processed a POST request.");
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             var person = JsonConvert.DeserializeObject<Person>(requestBody);
-            name = name ?? person?.Name;
 
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
+            if (Data.People.Any(x => x.Name == person.Name))
+            {
+                string response = $"Person with name {person.Name} already exists.";
+                log.LogInformation(response);
+                return new ConflictObjectResult(response);
+            }
 
-            return new OkObjectResult(responseMessage);
+            return new CreatedResult($"/api/v1/person?name={person.Name}", person.Name);
         }
     }
 }
