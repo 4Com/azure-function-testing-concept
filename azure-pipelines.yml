@@ -4,6 +4,9 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+variables:
+- group: azure-function-testing-concept
+
 steps:
 - task: DotNetCoreCLI@2
   displayName: Build solution
@@ -33,3 +36,11 @@ steps:
     PathtoPublish: '$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip'
     ArtifactName: 'drop'
     publishLocation: 'Container'
+
+- task: AzureFunctionApp@1
+  displayName: 'Deploy Package to Azure Function'
+  inputs:
+    azureSubscription: "$(azureResourceManagerConnection)"
+    appType: "functionApp"
+    appName: "$(functionAppName)"
+    package: "$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip"
