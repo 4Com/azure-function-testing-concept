@@ -10,3 +10,26 @@ steps:
   inputs:
     command: 'build'
     arguments: '--configuration Release'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish to output folder'
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    projects: 'src/http-function/http-function.csproj'
+    arguments: '--configuration Release --output publish_output'
+    zipAfterPublish: false
+    modifyOutputPath: false
+- task: ArchiveFiles@2
+  displayName: "Archive output folder"
+  inputs:
+    rootFolderOrFile: "$(System.DefaultWorkingDirectory)/publish_output"
+    includeRootFolder: false
+    archiveFile: "$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip"
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish archive'
+  inputs:
+    PathtoPublish: '$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
