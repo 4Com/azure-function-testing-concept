@@ -19,8 +19,8 @@
 									"    pm.response.to.have.status(404);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Response time is less than 200ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"pm.test(\"Response time is less than 300ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(300);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -84,8 +84,8 @@
 									"    pm.response.to.have.header(\"Content-Type\");\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Response time is less than 200ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"pm.test(\"Response time is less than 300ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(300);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -154,8 +154,8 @@
 									"    pm.response.to.have.header(\"Content-Type\");\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Response time is less than 200ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"pm.test(\"Response time is less than 300ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(300);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -217,8 +217,8 @@
 									"    pm.response.to.have.header(\"Content-Type\");\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Response time is less than 200ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"pm.test(\"Response time is less than 300ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(300);\r",
 									"});"
 								],
 								"type": "text/javascript"
