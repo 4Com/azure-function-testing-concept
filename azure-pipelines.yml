@@ -62,6 +62,7 @@ jobs:
       function: $(functionTestUrl)
       key: $(functionKey)
       method: 'GET'
+      queryParameters: 'name=John'
       waitForCompletion: 'true'
 
 - job: Test
