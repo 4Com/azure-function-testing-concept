@@ -39,14 +39,17 @@ jobs:
 - deployment: Deploy
   pool:
     vmImage: ubuntu-latest
-  steps:
-  - task: AzureFunctionApp@1
-    displayName: 'Deploy Package to Azure Function'
-    inputs:
-      azureSubscription: "$(azureResourceManagerConnection)"
-      appType: "functionApp"
-      appName: "$(functionAppName)"
-      package: "$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip"
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - task: AzureFunctionApp@1
+          displayName: 'Deploy Package to Azure Function'
+          inputs:
+            azureSubscription: "$(azureResourceManagerConnection)"
+            appType: "functionApp"
+            appName: "$(functionAppName)"
+            package: "$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip"
 
 - job: Poke
   pool: server
