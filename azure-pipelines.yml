@@ -1,6 +1,9 @@
 trigger:
 - main
 
+variables:
+- group: azure-function-testing-concept
+
 jobs:
 - job: Build
   pool:
@@ -36,8 +39,6 @@ jobs:
 - job: Deploy
   pool:
     vmImage: ubuntu-latest
-  variables:
-  - group: azure-function-testing-concept
   steps:
   - task: AzureFunctionApp@1
     displayName: 'Deploy Package to Azure Function'
@@ -49,8 +50,6 @@ jobs:
 
 - job: Poke
   pool: server
-  variables:
-  - group: azure-function-testing-concept
   steps:
   - task: AzureFunction@1
     inputs:
@@ -62,8 +61,6 @@ jobs:
 - job: Test
   pool:
     vmImage: ubuntu-latest
-  variables:
-  - group: azure-function-testing-concept
   steps:
   - task: Bash@3
     displayName: 'Run Newman Tests'
