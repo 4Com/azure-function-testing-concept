@@ -50,7 +50,7 @@ jobs:
             azureSubscription: "$(azureResourceManagerConnection)"
             appType: "functionApp"
             appName: "$(functionAppName)"
-            package: "$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip"
+            package: "$(Agent.BuildDirectory)/**/*.zip"
 
 - job: Poke
   pool: server
