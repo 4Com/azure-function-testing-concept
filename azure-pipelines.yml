@@ -45,6 +45,13 @@ steps:
     appName: "$(functionAppName)"
     package: "$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip"
 
+- task: AzureFunction@1
+  inputs:
+    function: $(appBaseUrl)
+    key: $(functionKey)
+    method: 'GET'
+    waitForCompletion: 'true'
+
 - task: Bash@3
   displayName: 'Run Newman Tests'
   continueOnError: true
