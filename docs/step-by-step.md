@@ -10,3 +10,4 @@ This is a series of notes to provide step by step instructions on how to set up 
 - Established GET and POST endpoints with several branching routes, which will provide scenarios for testing in Postman
 - Added in Microsoft.Azure.WebJobs.Extensions.OpenApi to decorate the two functions with OpenApi information to give a little documentation and quick import to postman
 - Once importated into Postman - exported the collection as a JSON file and added it to this project. This way anyone can import the collection into postman and see the tests, run them and propose new changes by exporting the collection back to source control.
+- Added pipeline for Azure DevOps that relies on some variables being set. These are in our private DevOps instance but can be substituted by anyone wishing to clone and use this project.
