@@ -1,63 +1,86 @@
 trigger:
 - main
 
-pool:
-  vmImage: ubuntu-latest
-
 variables:
 - group: azure-function-testing-concept
 
-steps:
-- task: DotNetCoreCLI@2
-  displayName: Build solution
-  inputs:
-    command: 'build'
-    arguments: '--configuration Release'
+jobs:
+- job: Build
+  pool:
+    vmImage: ubuntu-latest
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build solution
+    inputs:
+      command: 'build'
+      arguments: '--configuration Release'
+  - task: DotNetCoreCLI@2
+    displayName: 'Publish to output folder'
+    inputs:
+      command: 'publish'
+      publishWebProjects: false
+      projects: 'src/http-function/http-function.csproj'
+      arguments: '--configuration Release --output publish_output'
+      zipAfterPublish: false
+      modifyOutputPath: false
+  - task: ArchiveFiles@2
+    displayName: "Archive output folder"
+    inputs:
+      rootFolderOrFile: "$(System.DefaultWorkingDirectory)/publish_output"
+      includeRootFolder: false
+      archiveFile: "$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip"
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish archive'
+    inputs:
+      PathtoPublish: '$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip'
+      ArtifactName: 'drop'
+      publishLocation: 'Container'
 
-- task: DotNetCoreCLI@2
-  displayName: 'Publish to output folder'
-  inputs:
-    command: 'publish'
-    publishWebProjects: false
-    projects: 'src/http-function/http-function.csproj'
-    arguments: '--configuration Release --output publish_output'
-    zipAfterPublish: false
-    modifyOutputPath: false
-- task: ArchiveFiles@2
-  displayName: "Archive output folder"
-  inputs:
-    rootFolderOrFile: "$(System.DefaultWorkingDirectory)/publish_output"
-    includeRootFolder: false
-    archiveFile: "$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip"
+- deployment: Deploy
+  pool:
+    vmImage: ubuntu-latest
+  environment: dev
+  dependsOn: Build
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - task: AzureFunctionApp@1
+          displayName: 'Deploy Package to Azure Function'
+          inputs:
+            azureSubscription: "$(azureResourceManagerConnection)"
+            appType: "functionApp"
+            appName: "$(functionAppName)"
+            package: "$(Agent.BuildDirectory)/**/*.zip"
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish archive'
-  inputs:
-    PathtoPublish: '$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
+- job: Poke
+  pool: server
+  dependsOn: Deploy
+  steps:
+  - task: AzureFunction@1
+    inputs:
+      function: $(functionTestUrl)
+      key: $(functionKey)
+      method: 'GET'
+      queryParameters: 'name=John'
 
-- task: AzureFunctionApp@1
-  displayName: 'Deploy Package to Azure Function'
-  inputs:
-    azureSubscription: "$(azureResourceManagerConnection)"
-    appType: "functionApp"
-    appName: "$(functionAppName)"
-    package: "$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip"
-
-- task: Bash@3
-  displayName: 'Run Newman Tests'
-  continueOnError: true
-  inputs:
-    targetType: 'inline'
-    script: |
-      npm install -g newman
-      newman run '$(Build.SourcesDirectory)/tests/Azure Function Testing Concept.postman_collection.json' --env-var 'baseUrl=$(appBaseUrl)' --reporters cli,junit --reporter-junit-export junit-report.xml
-
-- task: PublishTestResults@2
-  displayName: 'Publish Test Results'
-  inputs:
-    testResultsFormat: 'JUnit'
-    testResultsFiles: '**/*.xml'
-    mergeTestResults: true
-    failTaskOnFailedTests: true
+- job: Test
+  pool:
+    vmImage: ubuntu-latest
+  dependsOn: Poke
+  steps:
+  - task: Bash@3
+    displayName: 'Run Newman Tests'
+    continueOnError: true
+    inputs:
+      targetType: 'inline'
+      script: |
+        npm install -g newman
+        newman run '$(Build.SourcesDirectory)/tests/Azure Function Testing Concept.postman_collection.json' --env-var 'baseUrl=$(appBaseUrl)' --reporters cli,junit --reporter-junit-export junit-report.xml
+  - task: PublishTestResults@2
+    displayName: 'Publish Test Results'
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: '**/*.xml'
+      mergeTestResults: true
+      failTaskOnFailedTests: true
