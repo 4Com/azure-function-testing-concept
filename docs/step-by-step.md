@@ -6,4 +6,5 @@ This is a series of notes to provide step by step instructions on how to set up 
   - https://markheath.net/post/azure-functions-docker
   - Creating a Dockerfile section
 - Added a new function in Visual Studio, using the projects right-click -> Add "New Azure Function..." option
+- Decided on some basic fake data for people, adding the Models/Person.cs and Data.cs files
 - 
