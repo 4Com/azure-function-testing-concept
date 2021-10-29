@@ -40,6 +40,7 @@ jobs:
   pool:
     vmImage: ubuntu-latest
   environment: dev
+  dependsOn: Build
   strategy:
     runOnce:
       deploy:
@@ -54,6 +55,7 @@ jobs:
 
 - job: Poke
   pool: server
+  dependsOn: Deploy
   steps:
   - task: AzureFunction@1
     inputs:
@@ -65,6 +67,7 @@ jobs:
 - job: Test
   pool:
     vmImage: ubuntu-latest
+  dependsOn: Poke
   steps:
   - task: Bash@3
     displayName: 'Run Newman Tests'
