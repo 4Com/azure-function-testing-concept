@@ -59,7 +59,7 @@ jobs:
   steps:
   - task: AzureFunction@1
     inputs:
-      function: $(appBaseUrl)
+      function: $(functionTestUrl)
       key: $(functionKey)
       method: 'GET'
       waitForCompletion: 'true'
