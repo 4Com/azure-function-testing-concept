@@ -36,7 +36,7 @@ jobs:
       ArtifactName: 'drop'
       publishLocation: 'Container'
 
-- job: Deploy
+- deployment: Deploy
   pool:
     vmImage: ubuntu-latest
   steps:
