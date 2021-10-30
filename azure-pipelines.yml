@@ -58,7 +58,9 @@ jobs:
   pool:
     vmImage: ubuntu-latest
   environment: dev
-  dependsOn: BuildFunction, BuildBicep
+  dependsOn: 
+    BuildFunction
+    BuildBicep
   strategy:
     runOnce:
       deploy:
