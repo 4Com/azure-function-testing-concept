@@ -45,6 +45,15 @@ jobs:
     runOnce:
       deploy:
         steps:
+        - task: AzureCLI@2
+          displayName: 'Deploy Azure Function Bicep'
+          inputs:
+            azureSubscription: $(azureResourceManagerConnection)
+            scriptType: bash
+            scriptLocation: inlineScript
+            inlineScript: |
+              az --version
+              az deployment group create --resource-group $(resourceGroup) --template-file function.bicep --parameters appName='$(functionAppName)'
         - task: AzureFunctionApp@1
           displayName: 'Deploy Package to Azure Function'
           inputs:
