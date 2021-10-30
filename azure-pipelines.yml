@@ -5,7 +5,7 @@ variables:
 - group: azure-function-testing-concept
 
 jobs:
-- job: Build Bicep
+- job: BuildBicep
   pool:
     vmImage: ubuntu-latest
   steps:
@@ -23,7 +23,7 @@ jobs:
       ArtifactName: 'finishedTemplate'  
       publishLocation: 'Container' 
 
-- job: Build Function
+- job: BuildFunction
   pool:
     vmImage: ubuntu-latest
   steps:
@@ -58,7 +58,7 @@ jobs:
   pool:
     vmImage: ubuntu-latest
   environment: dev
-  dependsOn: Build
+  dependsOn: BuildFunction, BuildBicep
   strategy:
     runOnce:
       deploy:
