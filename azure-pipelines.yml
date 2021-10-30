@@ -5,7 +5,25 @@ variables:
 - group: azure-function-testing-concept
 
 jobs:
-- job: Build
+- job: Build Bicep
+  pool:
+    vmImage: ubuntu-latest
+  steps:
+  - task: AzureCLI@2  
+    displayName: 'Build bicep artifact' 
+    inputs: 
+      azureSubscription: $(azureResourceManagerConnection) 
+      scriptType: 'pscore'  
+      scriptLocation: 'inlineScript'  
+      inlineScript: 'az bicep build --file function.bicep'
+  - task: PublishBuildArtifacts@1 
+    displayName: 'Publish bicep artifact' 
+    inputs: 
+      PathtoPublish: '$(Build.SourcesDirectory)/function.json'  
+      ArtifactName: 'finishedTemplate'  
+      publishLocation: 'Container' 
+
+- job: Build Function
   pool:
     vmImage: ubuntu-latest
   steps:
@@ -53,7 +71,7 @@ jobs:
             scriptLocation: inlineScript
             inlineScript: |
               az --version
-              az deployment group create --resource-group $(resourceGroup) --template-file ./function.bicep --parameters appName='$(functionAppName)'
+              az deployment group create --resource-group $(resourceGroup) --template-file $(Build.SourcesDirectory)/function.bicep --parameters appName='$(functionAppName)'
         - task: AzureFunctionApp@1
           displayName: 'Deploy Package to Azure Function'
           inputs:
