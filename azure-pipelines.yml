@@ -26,6 +26,7 @@ jobs:
 - job: BuildFunction
   pool:
     vmImage: ubuntu-latest
+  dependsOn: BuildBicep
   steps:
   - task: DotNetCoreCLI@2
     displayName: Build solution
@@ -58,9 +59,7 @@ jobs:
   pool:
     vmImage: ubuntu-latest
   environment: dev
-  dependsOn: 
-    BuildFunction
-    BuildBicep
+  dependsOn: BuildFunction
   strategy:
     runOnce:
       deploy:
