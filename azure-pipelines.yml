@@ -53,7 +53,7 @@ jobs:
             scriptLocation: inlineScript
             inlineScript: |
               az --version
-              az deployment group create --resource-group $(resourceGroup) --template-file function.bicep --parameters appName='$(functionAppName)'
+              az deployment group create --resource-group $(resourceGroup) --template-file ./function.bicep --parameters appName='$(functionAppName)'
         - task: AzureFunctionApp@1
           displayName: 'Deploy Package to Azure Function'
           inputs:
