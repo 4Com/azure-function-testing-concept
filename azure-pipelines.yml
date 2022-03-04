@@ -77,7 +77,7 @@ jobs:
           displayName: 'Deploy Package to Azure Function'
           inputs:
             azureSubscription: "$(azureResourceManagerConnection)"
-            appType: "functionApp"
+            appType: "functionAppLinux"
             appName: "$(functionAppName)"
             package: "$(Agent.BuildDirectory)/**/*.zip"
 
