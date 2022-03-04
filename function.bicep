@@ -64,6 +64,10 @@ resource functionAppName_resource 'Microsoft.Web/sites@2020-06-01' = {
           'value': appInsights.properties.InstrumentationKey
         }
         {
+          name: 'SCM_DO_BUILD_DURING_DEPLOYMENT'
+          value: 'false'
+        }
+        {
           name: 'FUNCTIONS_EXTENSION_VERSION'
           value: '~3'
         }
