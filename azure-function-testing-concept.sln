@@ -21,6 +21,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pipeline", "pipeline", "{08D8A03B-AC47-488D-B355-DECE770F4304}"
 	ProjectSection(SolutionItems) = preProject
 		azure-pipelines.yml = azure-pipelines.yml
+		.github\workflows\build.yml = .github\workflows\build.yml
 		function.bicep = function.bicep
 	EndProjectSection
 EndProject
