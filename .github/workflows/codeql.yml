@@ -31,10 +31,10 @@ jobs:
       with:
         languages: ${{ matrix.language }}
         
-    - name: Build and analyze
-      shell: powershell
-      run: |
-        dotnet build
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
