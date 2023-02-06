@@ -60,7 +60,7 @@ jobs:
           oas-url: ${{ secrets.SWAGGER_URI }}
           # The email address to which the penetration test report will be sent.
           #email: "xxx@apisec.ai"
-          #sarif-result-file: "ethicalcheck-results.sarif"
+          sarif-result-file: "ethicalcheck-results.sarif"
 
        - name: Upload sarif file to repository
          uses: github/codeql-action/upload-sarif@v2
