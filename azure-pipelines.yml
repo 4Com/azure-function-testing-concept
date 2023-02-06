@@ -7,7 +7,7 @@ variables:
 jobs:
 - job: BuildBicep
   pool:
-    vmImage: windows-latest
+    vmImage: ubuntu-latest
   steps:
   - task: AzureCLI@2  
     displayName: 'Build bicep artifact' 
@@ -16,7 +16,7 @@ jobs:
       scriptType: 'pscore'  
       scriptLocation: 'inlineScript'  
       inlineScript: 'az bicep build --file function.bicep'
-  - task: RunARMTTKTests@1
+  - task: RunARMTTKTestsXPlat@1
     inputs:
       templatelocation: '$(System.DefaultWorkingDirectory)\'
       resultLocation: '$(System.DefaultWorkingDirectory)\results'
