@@ -13,7 +13,6 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-05-01' = {
   kind: 'StorageV2'
   sku: {
     name: 'Standard_LRS'
-    tier: 'Standard'
   }
 }
 
@@ -60,8 +59,8 @@ resource functionAppName_resource 'Microsoft.Web/sites@2022-03-01' = {
       managedServiceIdentityId: 1
       appSettings: [
         {
-          'name': 'APPINSIGHTS_INSTRUMENTATIONKEY'
-          'value': appInsights.properties.InstrumentationKey
+          name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
+          value: appInsights.properties.InstrumentationKey
         }
         {
           name: 'SCM_DO_BUILD_DURING_DEPLOYMENT'
@@ -83,8 +82,5 @@ resource functionAppName_resource 'Microsoft.Web/sites@2022-03-01' = {
     }
   }
   dependsOn: [
-    appInsights
-    hostingPlan
-    storageAccount
   ]
 }
