@@ -7,17 +7,16 @@ var hostingPlanName = '${appName}${uniqueString(resourceGroup().id)}'
 var appInsightsName = '${appName}${uniqueString(resourceGroup().id)}'
 var functionAppName = appName
 
-resource storageAccount 'Microsoft.Storage/storageAccounts@2019-06-01' = {
+resource storageAccount 'Microsoft.Storage/storageAccounts@2022-05-01' = {
   name: storageAccountName
   location: location
   kind: 'StorageV2'
   sku: {
     name: 'Standard_LRS'
-    tier: 'Standard'
   }
 }
 
-resource appInsights 'Microsoft.Insights/components@2020-02-02-preview' = {
+resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
   name: appInsightsName
   location: location
   kind: 'web'
@@ -31,7 +30,7 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02-preview' = {
   }
 }
 
-resource hostingPlan 'Microsoft.Web/serverfarms@2020-10-01' = {
+resource hostingPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: hostingPlanName
   location: location
   sku: {
@@ -43,7 +42,7 @@ resource hostingPlan 'Microsoft.Web/serverfarms@2020-10-01' = {
   }
 }
 
-resource functionAppName_resource 'Microsoft.Web/sites@2020-06-01' = {
+resource functionAppName_resource 'Microsoft.Web/sites@2022-03-01' = {
   name: functionAppName
   location: location
   kind: 'functionapp,linux'
@@ -60,8 +59,8 @@ resource functionAppName_resource 'Microsoft.Web/sites@2020-06-01' = {
       managedServiceIdentityId: 1
       appSettings: [
         {
-          'name': 'APPINSIGHTS_INSTRUMENTATIONKEY'
-          'value': appInsights.properties.InstrumentationKey
+          name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
+          value: appInsights.properties.InstrumentationKey
         }
         {
           name: 'SCM_DO_BUILD_DURING_DEPLOYMENT'
@@ -83,8 +82,5 @@ resource functionAppName_resource 'Microsoft.Web/sites@2020-06-01' = {
     }
   }
   dependsOn: [
-    appInsights
-    hostingPlan
-    storageAccount
   ]
 }
