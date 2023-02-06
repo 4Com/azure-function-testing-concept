@@ -43,7 +43,7 @@ resource hostingPlan 'Microsoft.Web/serverfarms@2020-10-01' = {
   }
 }
 
-resource functionAppName_resource 'Microsoft.Web/sites@2020-06-01' = {
+resource functionAppName_resource 'Microsoft.Web/sites@2022-03-01' = {
   name: functionAppName
   location: location
   kind: 'functionapp,linux'
