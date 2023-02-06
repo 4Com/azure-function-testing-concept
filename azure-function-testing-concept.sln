@@ -24,6 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pipeline", "pipeline", "{08
 		.github\workflows\build.yml = .github\workflows\build.yml
 		.github\workflows\codeql.yml = .github\workflows\codeql.yml
 		.github\dependabot.yml = .github\dependabot.yml
+		.github\workflows\ethicalcheck.yml = .github\workflows\ethicalcheck.yml
 		function.bicep = function.bicep
 	EndProjectSection
 EndProject
