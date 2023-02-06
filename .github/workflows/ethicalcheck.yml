@@ -13,7 +13,6 @@ on:
   workflow_dispatch:
 
 env:
-  RESULTS_FILE: "ethicalcheck-results.sarif"
   EMAIL: "ian@rathbone.dev"
 
 permissions:
@@ -34,9 +33,9 @@ jobs:
           oas-url: ${{ secrets.SWAGGER_URI }}
           # The email address to which the penetration test report will be sent.
           email: $EMAIL
-          sarif-result-file: $RESULTS_FILE
+          sarif-result-file: "ethicalcheck-results.sarif"
           
        - name: Upload sarif file to repository
          uses: github/codeql-action/upload-sarif@v2
          with:
-          sarif_file: $RESULTS_FILE
+          sarif_file: "./ethicalcheck-results.sarif"
