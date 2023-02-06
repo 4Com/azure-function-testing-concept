@@ -17,7 +17,6 @@ jobs:
       scriptLocation: 'inlineScript'  
       inlineScript: 'az bicep build --file function.bicep'
   - task: RunARMTTKTestsXPlat@1
-    continueOnError: true
     inputs:
       templatelocation: '$(System.DefaultWorkingDirectory)\'
       resultLocation: '$(System.DefaultWorkingDirectory)\results'
