@@ -21,7 +21,6 @@ jobs:
     inputs:
       templatelocation: '$(System.DefaultWorkingDirectory)\'
       resultLocation: '$(System.DefaultWorkingDirectory)\results'
-      ignoreExitCode: true
   - task: PublishTestResults@2
     inputs:
       testResultsFormat: 'NUnit'
