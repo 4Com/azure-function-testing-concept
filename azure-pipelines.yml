@@ -16,6 +16,14 @@ jobs:
       scriptType: 'pscore'  
       scriptLocation: 'inlineScript'  
       inlineScript: 'az bicep build --file function.bicep'
+  - task: RunARMTTKTests@1
+    inputs:
+      templatelocation: '$(System.DefaultWorkingDirectory)\'
+      resultLocation: '$(System.DefaultWorkingDirectory)\results'
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'NUnit'
+      testResultsFiles: '$(System.DefaultWorkingDirectory)\results\*-armttk.xml'
   - task: PublishBuildArtifacts@1 
     displayName: 'Publish bicep artifact' 
     inputs: 
