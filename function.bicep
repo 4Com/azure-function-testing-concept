@@ -54,7 +54,7 @@ resource functionAppName_resource 'Microsoft.Web/sites@2022-03-01' = {
       http20Enabled: true
       remoteDebuggingEnabled: false
       minTlsVersion: '1.2'
-      linuxFxVersion: 'dotnet|3.1'
+      linuxFxVersion: 'dotnet|6.0'
       ftpsState: 'Disabled'
       managedServiceIdentityId: 1
       appSettings: [
@@ -68,7 +68,7 @@ resource functionAppName_resource 'Microsoft.Web/sites@2022-03-01' = {
         }
         {
           name: 'FUNCTIONS_EXTENSION_VERSION'
-          value: '~3'
+          value: '~4'
         }
         {
           name: 'FUNCTIONS_WORKER_RUNTIME'
